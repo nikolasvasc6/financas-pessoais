@@ -28,11 +28,11 @@ const FinanceApp = () => {
 
   const loadTransactions = async () => {
     try {
-      const keys = await window.storage.list('transaction:', true);
+      const keys = await window.storage.list('transaction:');
       if (keys && keys.keys) {
         const loadedTransactions = [];
         for (const key of keys.keys) {
-          const result = await window.storage.get(key, true);
+          const result = await window.storage.get(key);
           if (result) {
             loadedTransactions.push(JSON.parse(result.value));
           }
@@ -46,7 +46,7 @@ const FinanceApp = () => {
 
   const saveTransaction = async (transaction) => {
     try {
-      await window.storage.set(`transaction:${transaction.id}`, JSON.stringify(transaction), true);
+      await window.storage.set(`transaction:${transaction.id}`, JSON.stringify(transaction));
     } catch (error) {
       console.error('Erro ao salvar transação:', error);
     }
@@ -54,7 +54,7 @@ const FinanceApp = () => {
 
   const deleteTransaction = async (id) => {
     try {
-      await window.storage.delete(`transaction:${id}`, true);
+      await window.storage.delete(`transaction:${id}`);
       setTransactions(transactions.filter(t => t.id !== id));
     } catch (error) {
       console.error('Erro ao deletar transação:', error);
