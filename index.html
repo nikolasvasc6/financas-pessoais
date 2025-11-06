@@ -57,11 +57,8 @@ const FinanceApp = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    if (!formData.description || !formData.amount || !formData.date) {
-      alert('Por favor, preencha todos os campos');
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     
     const transaction = {
       id: editingId || Date.now().toString(),
@@ -132,6 +129,7 @@ const FinanceApp = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
             Finanças Pessoais
@@ -139,6 +137,7 @@ const FinanceApp = () => {
           <p className="text-purple-200">Controle completo do seu dinheiro</p>
         </div>
 
+        {/* Cards de resumo */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-2">
@@ -165,6 +164,7 @@ const FinanceApp = () => {
           </div>
         </div>
 
+        {/* Botão adicionar */}
         <div className="mb-6">
           <button
             onClick={() => setShowModal(true)}
@@ -175,6 +175,7 @@ const FinanceApp = () => {
           </button>
         </div>
 
+        {/* Lista de transações */}
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 shadow-xl">
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
             <CreditCard size={24} />
@@ -191,10 +192,10 @@ const FinanceApp = () => {
               {transactions.map((transaction) => (
                 <div
                   key={transaction.id}
-                  className="bg-white/5 backdrop-blur rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between hover:bg-white/10 transition-all gap-3"
+                  className="bg-white/5 backdrop-blur rounded-xl p-4 flex items-center justify-between hover:bg-white/10 transition-all"
                 >
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-1 flex-wrap">
+                    <div className="flex items-center gap-3 mb-1">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         transaction.type === 'income' 
                           ? 'bg-green-500/20 text-green-300' 
@@ -210,7 +211,7 @@ const FinanceApp = () => {
                     <p className="text-white font-medium">{transaction.description}</p>
                   </div>
                   
-                  <div className="flex items-center justify-between md:justify-end gap-4">
+                  <div className="flex items-center gap-4">
                     <p className={`text-xl font-bold ${
                       transaction.type === 'income' ? 'text-green-400' : 'text-red-400'
                     }`}>
@@ -239,6 +240,7 @@ const FinanceApp = () => {
         </div>
       </div>
 
+      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl">
@@ -254,7 +256,7 @@ const FinanceApp = () => {
               </button>
             </div>
 
-            <div className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-purple-200 mb-2 font-medium">Tipo</label>
                 <div className="grid grid-cols-2 gap-3">
@@ -291,6 +293,7 @@ const FinanceApp = () => {
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                   className="w-full bg-white/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Ex: Supermercado"
+                  required
                 />
               </div>
 
@@ -303,6 +306,7 @@ const FinanceApp = () => {
                   onChange={(e) => setFormData({...formData, amount: e.target.value})}
                   className="w-full bg-white/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="0,00"
+                  required
                 />
               </div>
 
@@ -326,6 +330,7 @@ const FinanceApp = () => {
                   value={formData.date}
                   onChange={(e) => setFormData({...formData, date: e.target.value})}
                   className="w-full bg-white/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  required
                 />
               </div>
 
@@ -338,15 +343,14 @@ const FinanceApp = () => {
                   Cancelar
                 </button>
                 <button
-                  type="button"
-                  onClick={handleSubmit}
+                  type="submit"
                   className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all flex items-center justify-center gap-2"
                 >
                   <Check size={20} />
                   {editingId ? 'Salvar' : 'Adicionar'}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}
